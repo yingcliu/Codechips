@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>clock</title>
+</head>
+<body>
+	<canvas id="clock" height="500" width="500">
+		浏览器不支持canvas
+	</canvas>
+
+	<script>
+	var clock = function(){
+		var cav = document.getElementById('clock'),
+			cW = cav.width,
+			cH = cav.height,
+			ctx = cav.getContext('2d'),
+			clockX = 250,  //表盘中心X位置
+			clockY = 250,  //表盘中心Y位置
+			clockRad = 200,  //表盘半径
+			dif = 38;  //表盘显示的时刻数字与表盘外围间距
+
+		setInterval(render,1000);  //轮询时间
+
+		//渲染时钟
+		function render(){
+			ctx.clearRect(0,0,cW,cH);
+			var now = new Date(),
+				H = now.getHours() > 12 ? now.getHours()-12 : now.getHours(),   //把小时数转为12小时制
+				m = now.getMinutes(),
+				s = now.getSeconds(),
+				timeArr = [H,m,s];
+				timeStr = H + ':' + (m > 9 ? m : '0'+ m) + ':' + (s > 9 ? s : '0' + s),
+				timeRotArr = timeToRot(timeArr);
+
+			//画表盘
+			drawBackground(clockX,clockY,clockRad);
+
+			//画时间数字
+			drawTimeText(3,clockX+(clockRad-dif),clockY);
+			drawTimeText(6,clockX,clockY+(clockRad-dif));
+			drawTimeText(9,clockX-(clockRad-dif),clockY);
+			drawTimeText(12,clockX,clockY-(clockRad-dif));  
+
+			drawTimeText(timeStr,clockX,clockY+70);  //画数码时间
+
+			drawScale(12,18,5,clockX,clockY);  //画时刻度
+			drawScale(60,8,3,clockX,clockY);  //画分秒刻度
+			drawHand(2,150,timeRotArr[2],clockX,clockY);    //画秒针
+			drawHand(5,120,timeRotArr[1],clockX,clockY);    //画分针
+			drawHand(8,80,timeRotArr[0],clockX,clockY);    //画时针
+		}
+
+		/**
+		* 时间转角度
+		* @param {Arr}timeArr 时间数组[H,m,s]
+		* @return {Arr} 返回角度数组
+		*/
+		function timeToRot(timeArr){
+			var H = timeArr[0],
+				M = timeArr[1],
+				S = timeArr[2],
+				rotH,rotM,rotS;
+			rotS = S*6*Math.PI/180;
+			rotM = M*6*Math.PI/180;
+			rotH = H*30*Math.PI/180 + M*0.5*Math.PI/180;
+			return [rotH,rotM,rotS];
+		}
+
+
+		/**
+		* 画指针
+		* @param {num}w 指针宽度
+		* @param {num}l 指针长度
+		* @param {num}rot 指针角度
+		* @param {num}x 起始点X位置
+		* @param {num}y 起始点Y位置
+		*/
+		function drawHand(w,l,rot,x,y){
+			ctx.save();
+			ctx.beginPath();
+			ctx.lineCap = 'round';
+			ctx.lineWidth = w;
+			ctx.translate(x,y);
+			ctx.rotate(rot-Math.PI);  //修正角度
+			ctx.moveTo(0,-l*0.12);  //延长指针
+			ctx.lineTo(0,l);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.restore();
+		}
+
+		/**
+		* 画刻度
+		* @param {num}num 刻度数量
+		* @param {num}length 刻度长度
+		* @param {num}width 刻度宽度
+		* @param {num}x 起始点X位置
+		* @param {num}y 起始点Y位置
+		*/
+		function drawScale(num,length,width,x,y){
+			var rot = 2*Math.PI/num;  //每个刻度偏转角度
+			for(var i=0; i<num; i++){
+				ctx.save();
+				ctx.beginPath();
+				ctx.lineCap = 'round';
+				ctx.lineWidth = width;
+				ctx.translate(x,y);
+				ctx.rotate(i*rot);
+				ctx.moveTo(0,-195+length);
+				ctx.lineTo(0,-195);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.restore();
+			}
+		}
+
+		/**
+		* 画表盘
+		* @param {num}x 表盘中心X位置
+		* @param {num}y 表盘中心y位置
+		* @param {num}r 表盘半径
+		*/
+		function drawBackground(x,y,r){
+			ctx.save();
+			ctx.beginPath();
+			ctx.lineWidth = 2;
+			ctx.arc(x,y,r,0,Math.PI*2);  //画外盘
+			ctx.stroke();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.arc(x,y,8,0,Math.PI*2);  //画中心点
+			ctx.fill();
+			ctx.closePath();
+			ctx.restore();
+		}
+
+		/**
+		* 画表盘文字
+		* @param {num}t 数值
+		* @param {num}x 数值x位置
+		* @param {num}y 数值y位置
+		*/
+		function drawTimeText(t,x,y){
+			ctx.save();
+			ctx.beginPath();
+			ctx.font = '24px Arial';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = "middle";
+			ctx.fillText(t,x,y);
+			ctx.closePath();
+			ctx.restore();
+		}
+	}()
+
+	</script>
+</body>
+</html>
