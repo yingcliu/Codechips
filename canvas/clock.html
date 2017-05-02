@@ -10,7 +10,7 @@
 	</canvas>
 
 	<script>
-	var clock = function(){
+		(function(){
 		var cav = document.getElementById('clock'),
 			cW = cav.width,
 			cH = cav.height,
@@ -151,7 +151,7 @@
 			ctx.closePath();
 			ctx.restore();
 		}
-	}()
+	})()
 
 	</script>
 </body>
