@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Wave-1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="canvas" width="400" height="400"></canvas>
+<script src="utils.js"></script>
+<script src="ball.js"></script>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById('canvas'),
+            context = canvas.getContext('2d'),
+            ball = new Ball(),
+            angle = 0,
+            centerY = 400,
+            range = 50,
+            xspeed = 1,
+            yspeed = 0.05;
+        ball.x = ball.radius;
+
+        (function drawFrame() {
+            window.requestAnimationFrame(drawFrame);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            if(ball.x > (canvas.width-ball.radius) || ball.x < ball.radius){
+                xspeed = -xspeed;
+            }
+            ball.x += xspeed;
+            ball.y = centerY / 2 + Math.sin(angle) * range;
+            angle += yspeed;
+            ball.draw(context);
+
+        }())
+    }
+</script>
+</body>
+</html>
