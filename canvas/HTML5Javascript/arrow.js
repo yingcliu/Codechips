@@ -1,9 +1,9 @@
 /**
  * Created by lyingc on 2017/5/5.
  */
-function Arrow() {
-    this.x = 0;
-    this.y = 0;
+function Arrow(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
     this.color = '#ffff00';
     this.rotation = 0;
 }

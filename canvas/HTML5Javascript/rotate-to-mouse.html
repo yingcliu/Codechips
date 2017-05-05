@@ -14,10 +14,7 @@
         var canvas = document.getElementById('canvas'),
             context = canvas.getContext('2d'),
             mouse = utils.captureMouse(canvas),
-            arrow = new Arrow();
-
-        arrow.x = canvas.width / 2;
-        arrow.y = canvas.height / 2;
+            arrow = new Arrow(canvas.width / 2, canvas.height / 2);
 
         (function drawFrame(){
             window.requestAnimationFrame(drawFrame);
