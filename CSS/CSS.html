@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS变量</title>
+    <style>
+        :root {
+            --color: blue;
+        }
+        body {
+            --basic: #CCC;
+            --error: #f00;
+            --warning: #fc0;
+            --test: 'hello'
+        }
+        header a{
+            color: var(--basic);
+        }
+        header a:before {
+            content: var(--test)' world';
+        }
+        .padding {
+            --gap: 20;
+            /*padding: var(--gap)px;  错误的写法*/
+            padding: calc(var(--gap)*1px);
+        }
+        div {
+            --color: green;
+        }
+        .orange {
+            --color: orange;
+        }
+        #red {
+            --color: red;
+        }
+        * {
+            color: var(--color);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="#">logo</a>
+    <div class="padding">test</div>
+    <p>blue</p>
+    <div>green</div>
+    <div class="orange">orange</div>
+    <div id="red">red</div>
+</header>
+</body>
+</html>
